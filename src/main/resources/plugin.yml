@@ -2,5 +2,6 @@ main: net.eazv.eauth.AuthPlugin
 name: eAuth
 version: ${project.version}
 author: Enoughsdv
+softdepend: [PlaceholderAPI]
 commands:
     setspawn:

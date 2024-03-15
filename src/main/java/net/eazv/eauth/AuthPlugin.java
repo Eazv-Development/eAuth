@@ -13,7 +13,7 @@ public class AuthPlugin extends JavaPlugin {
     public void onEnable() {
 
         this.saveDefaultConfig();
-
+        
         this.getCommand("setspawn").setExecutor(new SetSpawnCommand());
         this.getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
 

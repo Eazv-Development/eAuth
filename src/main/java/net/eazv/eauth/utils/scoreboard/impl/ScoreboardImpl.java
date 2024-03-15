@@ -16,15 +16,19 @@ public class ScoreboardImpl implements AssembleAdapter {
 
     @Override
     public String getTitle(Player player) {
-        return MessageUtil.translate(config.getString("SCOREBOARD.TITLE"));
+        String title = MessageUtil.translate(config.getString("SCOREBOARD.TITLE"));
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            return PlaceholderAPI.setPlaceholders(player, title);
+        }
+
+        return title;
     }
 
     @Override
     public List<String> getLines(Player player) {
-        final List<String> list = new ArrayList<>();
-
-        MessageUtil.translate(config.getStringList("SCOREBOARD.LINES"))
-                .forEach(list::add);
+        List<String> list = new ArrayList<>
+            (MessageUtil.translate(config.getStringList("SCOREBOARD.LINES")));
         
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             return PlaceholderAPI.setPlaceholders(player, list);

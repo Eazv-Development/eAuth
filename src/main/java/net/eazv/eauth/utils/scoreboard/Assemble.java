@@ -4,14 +4,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.eazv.eauth.utils.scoreboard.events.AssembleBoardCreateEvent;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -60,57 +57,16 @@ public class Assemble {
 
         // Ensure that the thread has stopped running.
         if (this.thread != null) {
-            this.thread.stop();
+            this.thread.interrupt();
             this.thread = null;
         }
 
         // Register new boards for existing online players.
         for (Player player : this.getPlugin().getServer().getOnlinePlayers()) {
-
-            // Call Events if enabled.
-            if (this.isCallEvents()) {
-                AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(player);
-
-                Bukkit.getPluginManager().callEvent(createEvent);
-                if (createEvent.isCancelled()) {
-                    continue;
-                }
-            }
-
             getBoards().putIfAbsent(player.getUniqueId(), new AssembleBoard(player, this));
         }
 
         // Start Thread.
         this.thread = new AssembleThread(this);
     }
-
-    /**
-     * Cleanup Assemble.
-     */
-    public void cleanup() {
-        // Stop thread.
-        if (this.thread != null) {
-            this.thread.stop();
-            this.thread = null;
-        }
-
-        // Unregister listeners.
-        if (listeners != null) {
-            HandlerList.unregisterAll(listeners);
-            listeners = null;
-        }
-
-        // Destroy player scoreboards.
-        for (UUID uuid : getBoards().keySet()) {
-            Player player = Bukkit.getPlayer(uuid);
-
-            if (player == null || !player.isOnline()) {
-                continue;
-            }
-
-            getBoards().remove(uuid);
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
-    }
-
 }

@@ -42,13 +42,8 @@ public class ProtectionListener implements Listener {
             return;
         }
         
-        Bukkit.getOnlinePlayers().stream().map(online -> {
-            player.hidePlayer(online);
-            return online;
-        }).forEachOrdered(online -> {
-            online.hidePlayer(player);
-        });
-
+        Bukkit.getOnlinePlayers().stream().peek(player::hidePlayer)
+            .forEachOrdered(online -> online.hidePlayer(player));
     }
 
     @EventHandler
@@ -128,7 +123,6 @@ public class ProtectionListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-
         if (!config.getBoolean("OPTIONS.CANCEL_CHAT")) {
             return;
         }
@@ -140,7 +134,6 @@ public class ProtectionListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
             return;
         }
@@ -152,11 +145,14 @@ public class ProtectionListener implements Listener {
 
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
-
         if (!(LocationUtil.parseToLocation(config.getString("LOCATION.SPAWN")) == null || config.getString("LOCATION.SPAWN") == null)) {
             String[] data = config.getString("LOCATION.SPAWN").split(", ");
 
             World world = Bukkit.getServer().getWorld(data[5]);
+
+            if (world == null) {
+                return;
+            }
 
             world.setGameRuleValue("doDaylightCycle", "false");
             world.setTime(6000);

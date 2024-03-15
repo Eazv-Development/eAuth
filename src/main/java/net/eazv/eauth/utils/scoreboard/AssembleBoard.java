@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import net.eazv.eauth.utils.scoreboard.events.AssembleBoardCreatedEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -73,12 +72,6 @@ public class AssembleBoard {
         Scoreboard scoreboard = getScoreboard();
         player.setScoreboard(scoreboard);
         getObjective();
-
-        // Call Events if enabled.
-        if (assemble.isCallEvents()) {
-            AssembleBoardCreatedEvent createdEvent = new AssembleBoardCreatedEvent(this);
-            Bukkit.getPluginManager().callEvent(createdEvent);
-        }
     }
 
     /**

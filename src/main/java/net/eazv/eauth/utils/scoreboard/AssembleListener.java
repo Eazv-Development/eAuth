@@ -1,7 +1,5 @@
 package net.eazv.eauth.utils.scoreboard;
 
-import net.eazv.eauth.utils.scoreboard.events.AssembleBoardCreateEvent;
-import net.eazv.eauth.utils.scoreboard.events.AssembleBoardDestroyEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -25,31 +23,11 @@ public class AssembleListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        // Call Events if enabled.
-        if (assemble.isCallEvents()) {
-            AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(event.getPlayer());
-
-            Bukkit.getPluginManager().callEvent(createEvent);
-            if (createEvent.isCancelled()) {
-                return;
-            }
-        }
-
         getAssemble().getBoards().put(event.getPlayer().getUniqueId(), new AssembleBoard(event.getPlayer(), getAssemble()));
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        // Call Events if enabled.
-        if (assemble.isCallEvents()) {
-            AssembleBoardDestroyEvent destroyEvent = new AssembleBoardDestroyEvent(event.getPlayer());
-
-            Bukkit.getPluginManager().callEvent(destroyEvent);
-            if (destroyEvent.isCancelled()) {
-                return;
-            }
-        }
-
         getAssemble().getBoards().remove(event.getPlayer().getUniqueId());
         event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
     }
