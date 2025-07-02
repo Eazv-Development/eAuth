@@ -1,9 +1,10 @@
 package net.eazv.eauth.listeners;
 
-import net.eazv.eauth.AuthPlugin;
+import net.eazv.eauth.EAuthPlugin;
 import net.eazv.eauth.utils.LocationUtil;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -19,17 +20,20 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class ProtectionListener implements Listener {
+public class EAuthProtectionListener implements Listener {
 
-    private final FileConfiguration config = AuthPlugin.getInstance().getConfig();
+    private final FileConfiguration config;
+
+    public EAuthProtectionListener(EAuthPlugin plugin) {
+        this.config = plugin.getConfig();
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-
         Player player = event.getPlayer();
 
         player.setFoodLevel(20);
-        player.setHealth(player.getHealth());
+        player.setHealth(player.getMaxHealth());
         player.getActivePotionEffects().clear();
         player.getInventory().clear();
         player.setFireTicks(0);
@@ -41,9 +45,11 @@ public class ProtectionListener implements Listener {
         if (!config.getBoolean("OPTIONS.HIDE_PLAYERS")) {
             return;
         }
-        
-        Bukkit.getOnlinePlayers().stream().peek(player::hidePlayer)
-            .forEachOrdered(online -> online.hidePlayer(player));
+
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            online.hidePlayer(player);
+            player.hidePlayer(online);
+        }
     }
 
     @EventHandler
@@ -145,33 +151,33 @@ public class ProtectionListener implements Listener {
 
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
-        if (!(LocationUtil.parseToLocation(config.getString("LOCATION.SPAWN")) == null || config.getString("LOCATION.SPAWN") == null)) {
-            String[] data = config.getString("LOCATION.SPAWN").split(", ");
+        String spawnData = config.getString("LOCATION.SPAWN");
+        if (spawnData == null) return;
 
-            World world = Bukkit.getServer().getWorld(data[5]);
+        Location location = LocationUtil.parseToLocation(spawnData);
+        if (location == null) return;
 
-            if (world == null) {
-                return;
-            }
+        World world = location.getWorld();
+        if (world == null) return;
 
-            world.setGameRuleValue("doDaylightCycle", "false");
-            world.setTime(6000);
-            world.setStorm(false);
-            world.setWeatherDuration(0);
-            world.setAnimalSpawnLimit(0);
-            world.setAmbientSpawnLimit(0);
-            world.setMonsterSpawnLimit(0);
-            world.setWaterAnimalSpawnLimit(0);
-        }
-
+        world.setGameRuleValue("doDaylightCycle", "false");
+        world.setTime(6000);
+        world.setStorm(false);
+        world.setWeatherDuration(0);
+        world.setAnimalSpawnLimit(0);
+        world.setAmbientSpawnLimit(0);
+        world.setMonsterSpawnLimit(0);
+        world.setWaterAnimalSpawnLimit(0);
     }
 
     private void teleportToSpawn(Player player) {
-        if (LocationUtil.parseToLocation(config.getString("LOCATION.SPAWN")) == null || config.getString("LOCATION.SPAWN") == null) {
-            return;
-        }
+        String spawnString = config.getString("LOCATION.SPAWN");
+        if (spawnString == null) return;
 
-        player.teleport(LocationUtil.parseToLocation(config.getString("LOCATION.SPAWN")));
+        Location location = LocationUtil.parseToLocation(spawnString);
+        if (location == null) return;
+
+        player.teleport(location);
     }
 
 }

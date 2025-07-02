@@ -1,7 +1,10 @@
-main: net.eazv.eauth.AuthPlugin
-name: eAuth
+main: net.eazv.eauth.EAuthPlugin
+name: EAuth
 version: ${project.version}
 author: Enoughsdv
 softdepend: [PlaceholderAPI]
+
 commands:
     setspawn:
+        description: Sets the authentication spawn location.
+        usage: /setspawn

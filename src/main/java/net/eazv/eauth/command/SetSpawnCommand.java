@@ -1,6 +1,6 @@
 package net.eazv.eauth.command;
 
-import net.eazv.eauth.AuthPlugin;
+import net.eazv.eauth.EAuthPlugin;
 import net.eazv.eauth.utils.LocationUtil;
 import net.eazv.eauth.utils.MessageUtil;
 
@@ -12,10 +12,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class SetSpawnCommand implements CommandExecutor {
 
-    private final FileConfiguration config = AuthPlugin.getInstance().getConfig();
+    private final EAuthPlugin plugin;
+
+    public SetSpawnCommand(EAuthPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        FileConfiguration config = plugin.getConfig();
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtil.translate(config.getString("MESSAGES.ONLY_PLAYERS")));
@@ -29,10 +34,12 @@ public class SetSpawnCommand implements CommandExecutor {
             return true;
         }
 
-        config.set("LOCATION.SPAWN", LocationUtil.parseToString(player.getLocation()));
-        AuthPlugin.getInstance().saveConfig();
 
-        player.sendMessage(MessageUtil.translate(config.getString("MESSAGES.SPAWN_SETTED")));
+
+        config.set("LOCATION.SPAWN", LocationUtil.parseToString(player.getLocation()));
+        plugin.saveConfig();
+
+        player.sendMessage(MessageUtil.translate(config.getString("MESSAGES.SPAWN_SET")));
 
         return true;
     }

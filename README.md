@@ -1,31 +1,38 @@
-# eAuth
-This open source add-on can help to have a better performance and not to use many plugins inside the Auth server.
+# 🛡️ eAuth
 
+**eAuth** is a lightweight plugin for authentication servers. It helps improve performance by managing essential features like player restrictions and scoreboards, all without needing multiple plugins.
 
-### Configuration:
-------------
-```yml
+## ⚙️ Configuration (`config.yml`)
+
+```yaml
 SCOREBOARD:
-    TICKS: 20
-    TITLE: "&b&lAuth Core"
-    LINES:
-        - "&7&m---------------------------"
-        - ""
-        - "&b&lLogin"
-        - "&7/login <pass>"
-        - ""
-        - "&b&lRegister"
-        - "&7/register <pass> <pass>"
-        - ""
-        - "&bplay.server.net"
-        - "&7&m---------------------------"
+  TICKS: 20
+  TITLE: "&b&leAuth Core"
+  LINES:
+    - "&7&m---------------------------"
+    - ""
+    - "&b&lLogin"
+    - "&7Use &f/login <password>"
+    - ""
+    - "&b&lRegister"
+    - "&7Use &f/register <password> <password>"
+    - ""
+    - "&fplay.server.net"
+    - "&7&m---------------------------"
 
 MESSAGES:
-    ONLY_PLAYERS: "&cThis command is only for players"
-    NO_PERMISSIONS: "&cYou don't have permissions"
-    SPAWN_SETTED: "&aSpawn has been currently setted."
-        
+  ONLY_PLAYERS: "&cThis command can only be used by players."
+  NO_PERMISSIONS: "&cYou do not have permission to use this command."
+  SPAWN_SET: "&aSpawn point has been successfully set."
+
 OPTIONS:
-    HIDE_PLAYERS: true
-    CANCEL_MOVEMENT: true
-    CANCEL_CHAT: true
+  HIDE_PLAYERS: true
+  CANCEL_MOVEMENT: true
+  CANCEL_CHAT: true
+```
+
+---
+
+### 📌 Additional Info
+* ✅ Optional: [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) support
+* 🧪 Command: `/setspawn` | sets the join spawn point

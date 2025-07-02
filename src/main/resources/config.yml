@@ -1,6 +1,6 @@
 SCOREBOARD:
     TICKS: 20
-    TITLE: "&b&lAuth Core"
+    TITLE: "&b&leAuth Core"
     LINES:
         - "&7&m---------------------------"
         - ""
@@ -14,10 +14,10 @@ SCOREBOARD:
         - "&7&m---------------------------"
 
 MESSAGES:
-    ONLY_PLAYERS: "&cThis command is only for players"
-    NO_PERMISSIONS: "&cYou don't have permissions"
-    SPAWN_SETTED: "&aSpawn has been currently setted."
-        
+    ONLY_PLAYERS: "&cThis command can only be used by players."
+    NO_PERMISSIONS: "&cYou do not have permission to use this command."
+    SPAWN_SET: "&aSpawn point has been successfully set."
+
 OPTIONS:
     HIDE_PLAYERS: true
     CANCEL_MOVEMENT: true

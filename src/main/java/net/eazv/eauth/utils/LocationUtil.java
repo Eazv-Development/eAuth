@@ -4,11 +4,12 @@ import lombok.experimental.UtilityClass;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 @UtilityClass
 public class LocationUtil {
 
-    public String parseToString(org.bukkit.Location location) {
+    public String parseToString(Location location) {
         if (location == null) {
             return null;
         }
@@ -21,25 +22,34 @@ public class LocationUtil {
                 + location.getWorld().getName();
     }
 
-    public Location parseToLocation(String string) {
-        if (string == null) {
+    public Location parseToLocation(String input) {
+        if (input == null || input.trim().isEmpty()) {
             return null;
         }
-        
-        String[] data = string.split(", ");
+
+        String[] data = input.split(",");
+
+        if (data.length != 6) {
+            Bukkit.getLogger().warning("[eAuth] Invalid location format: " + input);
+            return null;
+        }
+
         try {
-            double x = Double.parseDouble(data[0]);
-            double y = Double.parseDouble(data[1]);
-            double z = Double.parseDouble(data[2]);
-            float pitch = Float.valueOf(data[4]);
-            float yaw = Float.valueOf(data[3]);
-            org.bukkit.World world = Bukkit.getWorld(data[5]);
+            double x = Double.parseDouble(data[0].trim());
+            double y = Double.parseDouble(data[1].trim());
+            double z = Double.parseDouble(data[2].trim());
+            float yaw = Float.parseFloat(data[3].trim());
+            float pitch = Float.parseFloat(data[4].trim());
+            World world = Bukkit.getWorld(data[5].trim());
 
-            Location location = new Location(world, x, y, z, yaw, pitch);
+            if (world == null) {
+                Bukkit.getLogger().warning("[eAuth] World not found: " + data[5].trim());
+                return null;
+            }
 
-            return location;
+            return new Location(world, x, y, z, yaw, pitch);
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            Bukkit.getLogger().severe("[eAuth] Failed to parse location: " + input);
             return null;
         }
     }
